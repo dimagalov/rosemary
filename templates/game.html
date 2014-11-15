@@ -44,9 +44,9 @@
           messageList = $('#messageList');
 
       function handleMessage(message) {
-        var messageEl = $("<li class='message'>"
-          + "<span class='username' style='font-style: bold; font-color: " + message.color + ";' " 
-          + message.username + ": </span>" + message.text + "</li>");
+        var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
+
+        console.log(messageEl);
         messageList.append(messageEl);
       };
 
