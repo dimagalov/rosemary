@@ -73,7 +73,7 @@ def game():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, add_room_url=url_for('add_room'))
+    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=str(hex(Users[nickname].color)), channel=str(current_id), add_room_url=url_for('add_room'))
 
 if __name__ == "__main__":
     app.run(debug=True)
