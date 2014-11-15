@@ -3,16 +3,20 @@
   <head>
     {% block head %}
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script src="http://cdn.pubnub.com/pubnub-3.5.1.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.1.0.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+    <script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.5.1.js"></script>
 
     <title>{% block title %}{% endblock %} - Slines</title>
     {% endblock %}
   </head>
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
     <div id="footer">
       {% block footer %}
       {% endblock %}
