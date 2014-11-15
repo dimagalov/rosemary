@@ -29,8 +29,9 @@
   </div>
 
   <script>
-    var channel = 'chat',
-      name = 'test';
+    var channel = '{{ channel }}',
+        name = '{{ name }}',
+        mycolor = '{{ color }}';
         
     $(document).ready(function () {
       var pubnub = PUBNUB.init({
@@ -44,9 +45,8 @@
 
       function handleMessage(message) {
         var messageEl = $("<li class='message'>"
-          + "<span class='username' " + message.username + ": </span>"
-          + message.text
-          + "</li>");
+          + "<span class='username' style='font-style: bold; font-color: " + message.color + ";'" 
+          + message.username + ": </span>" + message.text + "</li>");
         messageList.append(messageEl);
       };
 
@@ -57,6 +57,7 @@
             channel: channel,
             message: {
               username: name,
+              color: mycolor,
               text: message
             }
           });
