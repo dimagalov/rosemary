@@ -15,17 +15,12 @@ class User:
         self.color = self.rand_color()
     
     def rand_color(self):
-        brightness = random.randint(150, 600)
-        red = random.randint(1, 255)
-        green = random.randint(1, 255)
-        blue = random.randint(1, 255)
-        total = red + green + blue
-        red = red * brightness // total
-        green = green * brightness // total
-        blue = blue * brightness // total
+        red = 150 + random.randint(-60, 60)
+        green = 150 + random.randint(-60, 60)
+        blue = 150 + random.randint(-60, 60)
         temp = [red, green, blue]
         index = random.randint(0, 2)
-        temp[index] = 0
+        temp[index] //= 2
         red, green, blue = temp[0], temp[1], temp[2]
         result = ("0" + str(hex(red))[2:])[-2:] + ("0" + str(hex(green))[2:])[-2:] + ("0" + str(hex(blue))[2:])[-2:]
         return result
