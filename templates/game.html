@@ -30,8 +30,8 @@
 
   <script>
     var channel = '{{ channel }}',
-        name = '{{ name }}',
-        mycolor = '{{ color }}';
+        name = '{{ nickname }}',
+        mycolor = '{{ mycolor }}';
         
     $(document).ready(function () {
       var pubnub = PUBNUB.init({
@@ -45,7 +45,7 @@
 
       function handleMessage(message) {
         var messageEl = $("<li class='message'>"
-          + "<span class='username' style='font-style: bold; font-color: " + message.color + ";'" 
+          + "<span class='username' style='font-style: bold; font-color: " + message.color + ";' " 
           + message.username + ": </span>" + message.text + "</li>");
         messageList.append(messageEl);
       };
