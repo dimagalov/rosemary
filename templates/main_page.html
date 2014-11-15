@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}Main Page{% endblock %}
+
+{% block content %}
+  <form action="{{ submit_url }}">
+    Enter your nickname: <input type="text" name="nickname" value="">
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}

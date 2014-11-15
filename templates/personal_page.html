@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}Personal Page{% endblock %}
+
+{% block content %}
+  <table>
+    {% for game in games %}
+      <tr>{{ game.id }}</tr>
+    {% endfor %}
+  </table>
+{% endblock %}

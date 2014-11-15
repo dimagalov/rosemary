@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Game{% endblock %}
+
+{% block content %}
+  <div id="right">
+    <a id="backButton" href="#" data-rel="back" data-role="button">Chat Rooms</a>
+    <ul id="messageList" data-role="listview"> </ul>
+    <textarea id="messageContent"></textarea>
+    <a id="sendMessageButton" href="#" data-role="button">Send Message</a>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      var pubnub = PUBNUB.init({
+        publish_key: 'pub-c-33787580-d63f-4c10-a274-4673c54b6655',
+        subscribe_key: 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe'
+      });
+
+      var messageContent = $('#messageContent'),
+          sendMessageButton = $('#sendMessageButton'),
+          messageList = $('#messageList');
+
+      function handleMessage(message) {
+        var messageEl = $("<li class='message'>"
+          + "<span class='username'>" + message.username + ": </span>"
+          + message.text
+          + "</li>");
+        messageList.append(messageEl);
+      };
+
+      sendMessageButton.click(function (event) {
+        var message = messageContent.val();
+        if (message != '') {
+          pubnub.publish({
+            channel: 'chat',
+            message: {
+              username: 'test',
+              text: message
+            }
+          });
+          messageContent.val("");
+        }
+      });
+
+      messageContent.bind('keydown', function (event) {
+        if((event.keyCode || event.charCode) !== 13) return true;
+        sendMessageButton.click();
+        return false;
+      });
+
+      pubnub.subscribe({
+        channel: 'chat',
+        message: handleMessage
+      });
+    });
+  </script>
+{% endblock %}
