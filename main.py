@@ -26,9 +26,11 @@ class User:
         return (red * 256 + green) * 256 + blue
 
 class Game:
-    def __init__(self, new_id, creator):
+    def __init__(self, new_id, name, creator):
         self.id = new_id
-        self.players = []
+        self.name = name
+        self.players = [creator]
+        self.url = url_for('game') + '?id=%d' % self.id
 
 @app.route("/")
 def landing():
@@ -36,25 +38,42 @@ def landing():
 
 @app.route("/personal_page")
 def personal_page():
-    global Users
+    global Users, Games
     nickname = request.args.get('nickname', '')
     if nickname not in Users:
         Users[nickname] = User(nickname)
-    return render_template('personal_page.html', nickname=nickname, games=Users[nickname].games, create_game_url=url_for('create_game'))
+    game_names = []
+    for game in Users[nickname].games:
+        game_names.append(game.name)
 
-@app.route("/create_game")
-def create_game():
+    return render_template('personal_page.html', nickname=nickname, games=Users[nickname].games, create_room_url=url_for('create_room'), all_games=Games, game_names=game_names)
+
+@app.route("/create_room")
+def create_room():
     global current_id, Games, Users
     nickname = request.args.get('nickname', '')
-    Games[current_id] = Game(current_id, nickname)
+    room_name = request.args.get('room_name', '')
+    Games[current_id] = Game(current_id, room_name, nickname)
     Users[nickname].games.append(Games[current_id])
     current_id += 1
 
     return redirect(url_for('personal_page') + '?nickname=%s' % nickname)
 
-# @app.route('/game/<int:id>')
-# def game(id):
-#     return render_template('game.html', players)
+@app.route("/add_room")
+def add_room():
+    nickname = request.args.get('nickname', '')
+    current_id = int(request.args.get('id', ''))
+    Games[current_id].players.append(nickname)
+    Users[nickname].games.append(Games[current_id])
+    return redirect(url_for('game') + '?nickname=%s&id=%d' % (nickname, current_id))
+
+@app.route('/game')
+def game():
+    global Games
+    nickname = request.args.get('nickname', '')
+    current_id = int(request.args.get('id', ''))
+    current_game = Games[current_id]
+    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, add_room_url=url_for('add_room'))
 
 if __name__ == "__main__":
     app.run(debug=True)

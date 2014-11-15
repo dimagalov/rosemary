@@ -2,6 +2,18 @@
 {% block title %}Game{% endblock %}
 
 {% block content %}
+  <div id="left">
+    <table>
+      {% for player in players %}
+        <tr><td>{{ player }}</td></tr>
+      {% endfor %}
+    </table>
+    <form action="{{ add_room_url }}">
+      <input type="submit" value="Add Room">
+      <input type="hidden" name="nickname" value="{{ nickname }}" />
+      <input type="hidden" name="id" value="{{ id }}" />
+    </form>
+  </div>
   <div id="right">
     <a id="backButton" href="#" data-rel="back" data-role="button">Chat Rooms</a>
     <ul id="messageList" data-role="listview"> </ul>

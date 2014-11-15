@@ -3,15 +3,25 @@
 
 {% block content %}
 
-  <h2>Hi, {{ nickname }}!</h2>
+  <h1>Hi, {{ nickname }}!</h2>
+  <h2> Used rooms </h2>
   <table>
     {% for game in games %}
-      <tr><td>{{ game.id }}</td></tr>
+      <tr><td><a id="enterGame" href="{{ game.url }}&nickname={{ nickname }}" data-role="button">{{ game.name }}</a></td></tr>
+    {% endfor %}
+  </table>
+  <h2> New rooms </h2>
+  <table>
+    {% for id in all_games.keys() %}
+      {% if all_games[id].name not in game_names %}
+        <tr><td><a id="enterGame" href="{{ all_games[id].url }}&nickname={{ nickname }}" data-role="button">{{ all_games[id].name }}</a></td></tr>
+      {%endif %}
     {% endfor %}
   </table>
 
-  <form action="{{ create_game_url }}">
-    <input type="submit" value="Create new game">
+  <form action="{{ create_room_url }}">
+    Enter room name: <input type="text" name="room_name" value="">
+    <input type="submit" value="Create Room">
     <input type="hidden" name="nickname" value="{{ nickname }}" />
   </form>
 
