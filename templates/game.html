@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}Game{% endblock %}
 
+{% block head %}
+  {{ super() }}
+  <style>
+    username{ font-style: bold; font-color: {{ username_color }} }
+  </style>
+{% endblock %}
+
 {% block content %}
   <div id="right">
     <a id="backButton" href="#" data-rel="back" data-role="button">Chat Rooms</a>
@@ -11,7 +18,7 @@
 
   <script>
     var channel = 'chat',
-        name = 'test';
+      name = 'test';
         
     $(document).ready(function () {
       var pubnub = PUBNUB.init({
@@ -25,7 +32,7 @@
 
       function handleMessage(message) {
         var messageEl = $("<li class='message'>"
-          + "<span class='username'>" + message.username + ": </span>"
+          + "<span class='username' " + message.username + ": </span>"
           + message.text
           + "</li>");
         messageList.append(messageEl);
