@@ -36,6 +36,17 @@ class Game:
 def landing():
     return render_template('main_page.html', submit_url=url_for('personal_page'))
 
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
+
 @app.route("/personal_page")
 def personal_page():
     global Users, Games
