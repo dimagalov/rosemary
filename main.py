@@ -23,7 +23,12 @@ class User:
         red = red * brightness // total
         green = green * brightness // total
         blue = blue * brightness // total
-        return (red * 256 + green) * 256 + blue
+        temp = [red, green, blue]
+        index = random.randint(0, 2)
+        temp[index] = 0
+        red, green, blue = temp[0], temp[1], temp[2]
+        result = ("0" + str(hex(red))[2:])[-2:] + ("0" + str(hex(green))[2:])[-2:] + ("0" + str(hex(blue))[2:])[-2:]
+        return result
 
 class Game:
     def __init__(self, new_id, name, creator):
@@ -73,7 +78,7 @@ def game():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=str(hex(Users[nickname].color)), channel=str(current_id), add_room_url=url_for('add_room'))
+    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'))
 
 if __name__ == "__main__":
     app.run(debug=True)
