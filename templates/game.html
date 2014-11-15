@@ -10,6 +10,9 @@
   </div>
 
   <script>
+    var channel = 'chat',
+        name = 'test';
+        
     $(document).ready(function () {
       var pubnub = PUBNUB.init({
         publish_key: 'pub-c-33787580-d63f-4c10-a274-4673c54b6655',
@@ -32,9 +35,9 @@
         var message = messageContent.val();
         if (message != '') {
           pubnub.publish({
-            channel: 'chat',
+            channel: channel,
             message: {
-              username: 'test',
+              username: name,
               text: message
             }
           });
@@ -49,7 +52,7 @@
       });
 
       pubnub.subscribe({
-        channel: 'chat',
+        channel: channel,
         message: handleMessage
       });
     });
