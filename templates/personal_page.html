@@ -2,8 +2,8 @@
 {% block title %}Personal Page{% endblock %}
 
 {% block content %}
-
-  <h1>Hi, {{ nickname }}!</h2>
+<!-- 
+  <h1>Hi, {{ nickname }}!</h1>
   <h2> Used rooms </h2>
   <table>
     {% for game in games %}
@@ -23,6 +23,44 @@
     Enter room name: <input type="text" name="room_name" value="">
     <input type="submit" value="Create Room">
     <input type="hidden" name="nickname" value="{{ nickname }}" />
+  </form> -->
+
+<div class="container"><div class="row">
+  <div class="page-header text-center pageelem">
+    <h1>Hi, {{nickname}}!</h1>
+  </div>
+
+  <div class="col-md-5 col-xs-12 pageelem">
+    <h2>Used rooms</h2>
+    <ul class="list-unstyled">
+      {% for game in games %}
+        <li>
+          <a id="enterGame" href="{{ game.url }}&nickname={{ nickname }}" data-role="button">{{ game.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-md-5 col-md-offset-2 col-xs-12 pageelem">
+    <h2>New rooms</h2>
+    <ul class="list-unstyled">
+      {% for id in all_games.keys() %}
+        {% if all_games[id].name not in game_names %}
+          <li>
+            <a id="enterGame" href="{{ all_games[id].url }}&nickname={{ nickname }}" data-role="button">{{ all_games[id].name }}</a>
+          </li>
+        {%endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div></div>
+
+<div class="navbar navbar-default navbar-fixed-bottom" style="background-color: #fff;">
+  <form class="navbar-form navbar-left" action="{{ create_room_url }}">
+    <input class="form-control" type="text" name="room_name" value="" placeholder="Enter room name">
+    <input class="form-control" type="submit" value="Create Room">
+    <input type="hidden" name="nickname" value="{{ nickname }}" />
   </form>
+</div>
 
 {% endblock %}

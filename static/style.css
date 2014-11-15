@@ -6,3 +6,8 @@ html, body {
 body {
     background-color: #8E551A
 }
+
+.pageelem {
+    background-color: #fff;
+    border-radius: 5px;
+}
