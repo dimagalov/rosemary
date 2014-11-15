@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, url_for, request, redirect
+import random
 
 app = Flask(__name__)
 
@@ -11,6 +12,18 @@ class User:
     def __init__(self, nickname):
         self.nickname = nickname
         self.games = []
+        self.color = self.rand_color()
+    
+    def rand_color(self):
+        brightness = random.randint(150, 600)
+        red = random.randint(1, 255)
+        green = random.randint(1, 255)
+        blue = random.randint(1, 255)
+        total = red + green + blue
+        red = red * brightness // total
+        green = green * brightness // total
+        blue = blue * brightness // total
+        return (red * 256 + green) * 256 + blue
 
 class Game:
     def __init__(self, new_id, creator):
