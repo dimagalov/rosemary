@@ -2,9 +2,17 @@
 {% block title %}Personal Page{% endblock %}
 
 {% block content %}
+
+  <h2>Hi, {{ nickname }}!</h2>
   <table>
     {% for game in games %}
-      <tr>{{ game.id }}</tr>
+      <tr><td>{{ game.id }}</td></tr>
     {% endfor %}
   </table>
+
+  <form action="{{ create_game_url }}">
+    <input type="submit" value="Create new game">
+    <input type="hidden" name="nickname" value="{{ nickname }}" />
+  </form>
+
 {% endblock %}
