@@ -2,36 +2,13 @@
 {% block title %}Personal Page{% endblock %}
 
 {% block content %}
-<!-- 
-  <h1>Hi, {{ nickname }}!</h1>
-  <h2> Used rooms </h2>
-  <table>
-    {% for game in games %}
-      <tr><td><a id="enterGame" href="{{ game.url }}&nickname={{ nickname }}" data-role="button">{{ game.name }}</a></td></tr>
-    {% endfor %}
-  </table>
-  <h2> New rooms </h2>
-  <table>
-    {% for id in all_games.keys() %}
-      {% if all_games[id].name not in game_names %}
-        <tr><td><a id="enterGame" href="{{ all_games[id].url }}&nickname={{ nickname }}" data-role="button">{{ all_games[id].name }}</a></td></tr>
-      {%endif %}
-    {% endfor %}
-  </table>
-
-  <form action="{{ create_room_url }}">
-    Enter room name: <input type="text" name="room_name" value="">
-    <input type="submit" value="Create Room">
-    <input type="hidden" name="nickname" value="{{ nickname }}" />
-  </form> -->
-
 <div class="container"><div class="row">
-  <div class="page-header text-center pageelem">
+  <div class="page-header text-center pageelem" style="padding-top: 1px;">
     <h1>Hi, {{nickname}}!</h1>
   </div>
 
   <div class="col-md-5 col-xs-12 pageelem">
-    <h2>Used rooms</h2>
+    <h2 style="margin-bottom: 15px;">Used rooms</h2>
     <ul class="list-unstyled">
       {% for game in games %}
         <li>
@@ -42,7 +19,7 @@
   </div>
 
   <div class="col-md-5 col-md-offset-2 col-xs-12 pageelem">
-    <h2>New rooms</h2>
+    <h2 style="margin-bottom: 15px;">New rooms</h2>
     <ul class="list-unstyled">
       {% for id in all_games.keys() %}
         {% if all_games[id].name not in game_names %}

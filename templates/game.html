@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  <div id="left">
+  <!-- <div id="left">
     <table>
       {% for player in players %}
         <tr><td>{{ player }}</td></tr>
@@ -26,6 +26,30 @@
     <ul id="messageList" data-role="listview"> </ul>
     <textarea id="messageContent"></textarea>
     <a id="sendMessageButton" href="#" data-role="button">Send Message</a>
+  </div> -->
+
+  <div class="container" style="margin-bottom: 50px;">
+    <div class="row">
+      <div class="col-md-9 col-xs-12" style="background-color: #fff;">Lorem ipsum</div>
+      <div class="col-md-3 col-xs-12" style="background-color: #fff;">
+        <div class="col-xs-12">
+          <ul id="messageList" class="list-unstyled"></ul>
+        </div>
+        <div class="col-xs-12">
+          <form id="messageInputForm" class="from">
+            <input id="messageInput" class="form-control" type="text">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar navbar-default navbar-fixed-bottom" style="background-color: #fff;">
+    <form class="navbar-form" action="{{ add_room_url }}">
+      <button type="submit" class="btn btn-default">Add group</button>
+      <input type="hidden" name="nickname" value="{{ nickname }}" />
+      <input type="hidden" name="id" value="{{ id }}" />
+    </form>
   </div>
 
   <script>
@@ -50,8 +74,9 @@
         messageList.append(messageEl);
       };
 
-      sendMessageButton.click(function (event) {
-        var message = messageContent.val();
+      $("#messageInputForm").submit(function(event) {
+        event.preventDefault();
+        message = $("#messageInput").val();
         if (message != '') {
           pubnub.publish({
             channel: channel,
@@ -61,14 +86,8 @@
               text: message
             }
           });
-          messageContent.val("");
+          $("#messageInput").val("");
         }
-      });
-
-      messageContent.bind('keydown', function (event) {
-        if((event.keyCode || event.charCode) !== 13) return true;
-        sendMessageButton.click();
-        return false;
       });
 
       pubnub.subscribe({
