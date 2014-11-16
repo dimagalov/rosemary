@@ -42,7 +42,7 @@ class Game:
     def check(self, s):
         if self.snakes[s].chole >= -1:
             return False
-        lengt = len(self.snakes[s].points)
+        length = len(self.snakes[s].points)
         ind = False
         ind |= (self.snakes[s].position.x < 0)
         ind |= (self.snakes[s].position.x > self.canvasSizes[0])

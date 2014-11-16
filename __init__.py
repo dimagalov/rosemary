@@ -25,12 +25,13 @@ class User:
         result = ("0" + str(hex(red))[2:])[-2:] + ("0" + str(hex(green))[2:])[-2:] + ("0" + str(hex(blue))[2:])[-2:]
         return result
 
-class Game:
+class GameServer:
     def __init__(self, new_id, name, creator):
         self.id = new_id
         self.name = name
         self.players = [creator]
         self.url = url_for('game') + '?id=%d' % self.id
+        self.active = False
 
 @app.route("/")
 def landing():
@@ -64,11 +65,21 @@ def create_room():
     global current_id, Games, Users
     nickname = request.args.get('nickname', '')
     room_name = request.args.get('room_name', '')
-    Games[current_id] = Game(current_id, room_name, nickname)
+    Games[current_id] = GameServer(current_id, room_name, nickname)
     Users[nickname].games.append(Games[current_id])
     current_id += 1
 
     return redirect(url_for('personal_page') + '?nickname=%s' % nickname)
+
+@app.route("/start_game")
+def start_game():
+    global Games, Users
+    current_id = int(request.args.get('id', ''))
+    nickname = request.args.get('nickname', '')
+    current_game = Games[current_id]
+    Games[current_id].active = True
+
+    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
 
 @app.route("/add_room")
 def add_room():
@@ -84,7 +95,7 @@ def game():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'))
+    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
 
 if __name__ == "__main__":
     app.run(debug=True)
