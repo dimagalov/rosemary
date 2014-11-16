@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import random
+import md5
 from game import game
 from threading import *
 from Pubnub import Pubnub
@@ -9,7 +10,7 @@ from flask import Flask, render_template, url_for, request, redirect
 
 app = Flask(__name__)
 
-current_id, Users, Games = 1, dict(), dict()
+current_id, Users, Games = md5.new(str(random.randint(0, 100000000000000000000))).hexdigest(), dict(), dict()
 
 MAX_GAME = dict()
 
@@ -46,7 +47,7 @@ class GameServer:
         self.id = new_id
         self.name = name
         self.players = [creator]
-        self.url = url_for('game_page') + '?id=%d' % self.id
+        self.url = url_for('game_page') + '?id=%s' % self.id
         self.active = False
         self.pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
         self.pubnub.subscribe(str(self.id) + "_sis", callback=self.handleDeltaChange, error=None)
@@ -96,7 +97,7 @@ def create_room():
     room_name = request.args.get('room_name', '')
     Games[current_id] = GameServer(current_id, room_name, nickname)
     Users[nickname].games.append(Games[current_id])
-    current_id += 1
+    current_id = md5.new(str(random.randint(0, 100000000000000000000))).hexdigest()
 
     return redirect(url_for('personal_page') + '?nickname=%s' % nickname)
 
@@ -126,7 +127,7 @@ def add_room():
 def game_page():
     global Games
     nickname = request.args.get('nickname', '')
-    current_id = int(request.args.get('id', ''))
+    current_id = request.args.get('id', '')
     # current_id = 1
     current_game = Games[current_id]
     # print "iiojioejfwoierjpidk"
