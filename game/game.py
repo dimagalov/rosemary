@@ -17,7 +17,9 @@ defaultParams = {
 }
 
 class Game:
-    def __init__(self, _params = defaultParams):
+    def __init__(self, _id, _params = defaultParams):
+        self.id = _id
+
         self.rounds = _params["rounds"]
         self.playersCount = _params["playersCount"]
         self.colors = _params["colors"]
