@@ -131,6 +131,9 @@ def game_page():
 #         except:
 #             pass
 #             # YA EBAL KAROCH
+#
+# def set_up_game():
+#     not in this life;
 
 if __name__ == "__main__":
     # get_preferences()
