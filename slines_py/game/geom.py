@@ -18,7 +18,7 @@ def differentSignes(_a, _b):
 Returns oriented square of trianle
 '''
 def triangleArea(_p1, _p2, _p3):
-    return crossProduct(Vector(_p1, _p2), Vector(_p1, _p3)) / 2.0;
+    return crossProduct(Vector(_p1, _p2), Vector(_p1, _p3)) / 2.0
 
 
 '''
@@ -36,11 +36,11 @@ Checks if point _x belongs to the segment with ends _p1, _p2
 def pointOnVector(_x, _p1, _p2):
     on_ab = abs(crossProduct(Vector(_p1, _x), Vector(_p1, _p2))) < eps and dotProduct(Vector(_p1, _x), Vector(_p1, _p2)) > eps
     _p1, _p2 = _p2, _p1
-    on_ba = abs(crossProduct(Vector(_p1, _x), Vector(_p1, _p2))) < eps and dotProduct(Vector(_p1, _x), Vector(_p1, _p2)) > eps;
+    on_ba = abs(crossProduct(Vector(_p1, _x), Vector(_p1, _p2))) < eps and dotProduct(Vector(_p1, _x), Vector(_p1, _p2)) > eps
     return on_ab and on_ba
 
 '''
 Checks if two segments intersects
 '''
 def segmentsIntersect(a, b, c, d):
-    return differentSigns(triangleArea(a, b, c), triangleArea(a, b, d)) and differentSigns(triangleArea(c, d, a), triangleArea(c, d, b)) and projectionsIntersect(a.x, b.x, c.x, d.x) and projectionsIntersect(a.y, b.y, c.y, d.y);
+    return differentSigns(triangleArea(a, b, c), triangleArea(a, b, d)) and differentSigns(triangleArea(c, d, a), triangleArea(c, d, b)) and projectionsIntersect(a.x, b.x, c.x, d.x) and projectionsIntersect(a.y, b.y, c.y, d.y)

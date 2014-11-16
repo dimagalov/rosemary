@@ -19,7 +19,7 @@ class Game:
 
         self.snakes = []
         self.alive = []
-        self.aliveCount = self.playersCount;
+        self.aliveCount = self.playersCount
         self.walls = [
             Point(0, 0), 
             Point(self.canvasSizes[0], 0), 
@@ -63,7 +63,7 @@ class Game:
     def restart(self):
         self.snakes = []
         self.alive = []
-        self.aliveCount = self.playersCount;
+        self.aliveCount = self.playersCount
         for i in range(self.playersCount):
             self.snakes.append(Snake(self.canvasSizes, self.colors[i], self.ucolors[i]))
             self.alive.append(True)

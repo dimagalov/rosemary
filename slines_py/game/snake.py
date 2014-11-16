@@ -8,12 +8,12 @@ class Snake:
     cangle = 0.1
     cspeed = 3.5
     choleprob = 0.08
-    choleborder = -10;
-    choleminsize = 5;
-    cholemaxsize = 10;
+    choleborder = -10
+    choleminsize = 5
+    cholemaxsize = 10
 
     def __init__(self, _canvasSizes, _color, _ucolor):
-        self.chole = 0;
+        self.chole = 0
 
         self.color = _color
         self.ucolor = _ucolor
@@ -23,9 +23,9 @@ class Snake:
         self.points = [self.position]
 
     def update(self, _direction):
-        self.chole -= 1;
-        previous = self.position;
-        self.angle += _direction * self.cangle;
+        self.chole -= 1
+        previous = self.position
+        self.angle += _direction * self.cangle
         if self.angle < 0:
             self.angle += 2 * math.pi
         if self.angle >= 2 * math.pi:
@@ -35,4 +35,4 @@ class Snake:
         if self.chole > 0 or (self.chole < self.choleborder and random() < self.choleborder):
             self.points.append(FakePoint())
             if self.chole < self.choleborder:
-                self.chole = randint(self.choleminsize, self.cholemaxsize);
+                self.chole = randint(self.choleminsize, self.cholemaxsize)
