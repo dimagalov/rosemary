@@ -28,14 +28,17 @@
 
   <div class="navbar navbar-default navbar-fixed-bottom" style="background-color: #fff;">
     <div class="row">
-      <div class="col-md-1 col-xs-6">
+      <div class="col-md-1 col-xs-3">
+        <div class="btn btn-primary navbar-btn" style="margin-left: 5px;">back</div>
+      </div>
+      <div class="col-md-1 col-xs-3">
         <form class="navbar-form" action="{{ add_room_url }}">
           <button type="submit" class="btn btn-default">Add group</button>
           <input type="hidden" name="nickname" value="{{ nickname }}" />
           <input type="hidden" name="id" value="{{ id }}" />
         </form>
       </div>
-      <div class="col-md-8 col-xs-6">
+      <div class="col-md-7 col-xs-6">
         {% if not_active_game %}
           <form class="navbar-form" action="{{ start_game_url }}">
             <button type="submit" class="btn btn-default">Start game</button>
@@ -161,7 +164,6 @@
       var game = new Game(channel, players, canvas, $("#gameTable"));
 
       var gameFunction = function () {
-        console.log(deltas);
         game.update(deltas);
         if (game.alive_count <= 1) {
             stopGame();
@@ -189,7 +191,7 @@
                     var player, score;
                     for (i = 0; i < game.players_count; ++i) {
                         score = parseInt($("#player" + (i + 1).toString() + " div.playerScore", this.table).html());
-                        player = $("#player" + (i + 1).toString() + " div.playerName", this.table).html();
+                        player = game.snakes[i].player;
                         if (score > best_score) {
                             best_score = score;
                             best_player = player;
@@ -224,7 +226,7 @@
             }
         }, 500);
       {% endif %}
-    }
+    };
     });
   </script>
 {% endblock %}
