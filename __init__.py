@@ -13,16 +13,16 @@ current_id, Users, Games = 1, dict(), dict()
 
 MAX_GAME = dict()
 
-class GameThread(Thread):
-    def __init__(self, _event, _game):
-        Thread.__init__(self)
-        self.stopped = _event
-        self.game = _game
-    def run(self):
-        while not self.stopped.wait(0.4):
-            self.game.update(list([snake.delta for snake in self.game.snakes]))
-            if self.game.aliveCount <= 1:
-                self.stopped.set()
+# class GameThread(Thread):
+#     def __init__(self, _event, _game):
+#         Thread.__init__(self)
+#         self.stopped = _event
+#         self.game = _game
+#     def run(self):
+#         while not self.stopped.wait(0.4):
+#             self.game.update(list([snake.delta for snake in self.game.snakes]))
+#             if self.game.aliveCount <= 1:
+#                 self.stopped.set()
 
 class User:
     def __init__(self, nickname):
@@ -123,9 +123,9 @@ def game_page():
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
 
-    if current_game.active:
-        current_thread = GameThread(Event(), MAX_GAME[str(current_id) + "_sis"])
-        current_thread.start()
+    # if current_game.active:
+    #     current_thread = GameThread(Event(), MAX_GAME[str(current_id) + "_sis"])
+    #     current_thread.start()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
