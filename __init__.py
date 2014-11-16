@@ -121,6 +121,7 @@ def game_page():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
+    print "iiojioejfwoierjpidk"
     if current_game.active:
         current_thread = GameThread(Event(), MAX_GAME[current_id])
         current_thread.start()
