@@ -1,27 +1,17 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, url_for, request, redirect
 import random
 from game import game
 from threading import *
 from Pubnub import Pubnub
+from flask import Flask, render_template, url_for, request, redirect
 
 app = Flask(__name__)
 
 current_id, Users, Games = 1, dict(), dict()
 
 MAX_GAME = dict()
-
-def handleDeltaChange(message, channel):
-    if 1 not in MAX_GAME:
-        return
-    for snake in MAX_GAME[1].snakes:
-        if snake.player == message["nickname"]:
-            snake.delta = int(message["delta"])
-
-pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
-pubnub.subscribe("game_channel", callback=handleDeltaChange, error=None)
 
 class GameThread(Thread):
     def __init__(self, _event, _game):
@@ -58,6 +48,19 @@ class GameServer:
         self.players = [creator]
         self.url = url_for('game_page') + '?id=%d' % self.id
         self.active = False
+        self.pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
+        self.pubnub.subscribe(str(self.id) + "_sis", callback=self.handleDeltaChange, error=None)
+
+    def handleDeltaChange(self, message, channel):
+        global MAX_GAME
+        # print("---->", message)
+        # parsed_message = json.loads(message)
+        if MAX_GAME.keys() != []:
+            print(MAX_GAME.keys())
+            for snake in MAX_GAME[channel].snakes:
+                print(snake.player, message["nickname"])
+                if snake.player == message["nickname"]:
+                    snake.delta = int(message["delta"])
 
 @app.route("/")
 def landing():
@@ -99,13 +102,15 @@ def create_room():
 
 @app.route("/start_game")
 def start_game():
-    global Games, Users
+    global Games, Users, MAX_GAME
     current_id = int(request.args.get('id', ''))
     nickname = request.args.get('nickname', '')
     current_game = Games[current_id]
     Games[current_id].active = True
 
-    MAX_GAME[current_id] = game.Game(current_id, Games[current_id].players)
+    MAX_GAME[str(current_id) + "_sis"] = game.Game(current_id, Games[current_id].players)
+
+    print("!!!!!!!!!!!!!", MAX_GAME.keys())
 
     return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 
@@ -121,13 +126,14 @@ def add_room():
 def game_page():
     global Games
     nickname = request.args.get('nickname', '')
-    # current_id = int(request.args.get('id', ''))
-    current_id = 1
+    current_id = int(request.args.get('id', ''))
+    # current_id = 1
     current_game = Games[current_id]
-    print "iiojioejfwoierjpidk"
+    # print "iiojioejfwoierjpidk"
+
     if current_game.active:
         print "active, bitch"
-        current_thread = GameThread(Event(), MAX_GAME[current_id])
+        current_thread = GameThread(Event(), MAX_GAME[str(current_id) + "_sis"])
         current_thread.start()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         

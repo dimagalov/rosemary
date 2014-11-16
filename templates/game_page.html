@@ -115,7 +115,7 @@
       };
 
       pubnub.subscribe({
-        channel: "game_channel",
+        channel: channel + "_sis_draw",
         message: handleVal
       });
 
@@ -129,8 +129,8 @@
           else if (e.keyCode == 39)
             ++delta;
           pubnub.publish({
-            channel: "game_channel",  // GALOV NE ZABUD ETOT HUI
-            message: {"nickname": name, "delta":delta} 
+            channel: channel + "_sis",
+            message: {"nickname": name, "delta": delta} 
           });
       });
       $(document).keyup(function (e) {
@@ -140,8 +140,8 @@
           else if (e.keyCode == 39)
             --delta;
           pubnub.publish({
-            channel: "game_channel",  // GALOV NE ZABUD ETOT HUI
-            message: {"nickname": name, "delta":delta} 
+            channel: channel + "_sis",
+            message: {"nickname": name, "delta": delta} 
           });
       });
 

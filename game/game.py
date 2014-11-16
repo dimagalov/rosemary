@@ -70,7 +70,7 @@ class Game:
             if self.alive[i] and self.check(i):
                 self.alive[i] = False
                 self.aliveCount -= 1
-        pubnub.publish("game_channel", json.dumps(toDraw))
+        pubnub.publish(str(self.id) + "_sis_draw", json.dumps(toDraw))
 
     def restart(self):
         self.snakes = []
