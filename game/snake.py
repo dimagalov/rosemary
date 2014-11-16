@@ -11,8 +11,10 @@ class Snake:
     choleborder = -10
     choleminsize = 5
     cholemaxsize = 10
+    
+    def __init__(self, _canvasSizes, _color, _ucolor, _player):
+        self.player = _player
 
-    def __init__(self, _canvasSizes, _color, _ucolor):
         self.chole = 0
 
         self.color = _color
@@ -21,6 +23,8 @@ class Snake:
         self.position = Point(randint(100, _canvasSizes[0] - 100), randint(100, _canvasSizes[1] - 100))
         self.angle = random()
         self.points = [self.position]
+
+        self.delta = 0
 
     def update(self, _direction):
         self.chole -= 1

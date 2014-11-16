@@ -5,12 +5,21 @@ from flask import Flask, render_template, url_for, request, redirect
 import random
 from game import game
 from threading import *
+from Pubnub import Pubnub
 
 app = Flask(__name__)
 
 current_id, Users, Games = 1, dict(), dict()
 
 MAX_GAME = dict()
+
+def handleDeltaChange(message, channel):
+    for snake in MAX_GAME[1].snakes:
+        if snake.player == message["nickname"]:
+            snake.delta = int(message["delta"])
+
+pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
+pubnub.subscribe("game_channel", callback=handleDeltaChange, error=None)
 
 class GameThread(Thread):
     def __init__(self, _event, _game):
@@ -19,7 +28,7 @@ class GameThread(Thread):
         self.game = _game
     def run(self):
         while not self.stopped.wait(0.01):
-            self.game.update([0,0,0,0])
+            # self.game.update(list([snake.delta for snake in self.game.snakes]))
             if self.game.aliveCount <= 1:
                 self.stopped.set()
 
@@ -94,7 +103,7 @@ def start_game():
     current_game = Games[current_id]
     Games[current_id].active = True
 
-    MAX_GAME[current_id] = game.Game(current_id)
+    MAX_GAME[current_id] = game.Game(current_id, Games[current_id].players)
 
     return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 

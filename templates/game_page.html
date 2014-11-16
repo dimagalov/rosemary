@@ -13,7 +13,7 @@
       </div>
       <div class="col-md-3 col-xs-12" style="background-color: #fff;">
         <div class="col-xs-12">
-          <ul id="messageList" class="list-unstyled" style="overflow: auto;"></ul>
+          <ul id="messageList" class="list-unstyled" style="overflow: auto; padding-bottom:50px;"></ul>
         </div>
       </div>
     </div>
@@ -71,6 +71,7 @@
 
         // console.log(messageEl);
         messageList.append(messageEl);
+        $("ul").animate({ scrollTop: $(document).height() - $(window).height() }, 'slow');
       };
 
       $("#messageInputForm").submit(function(event) {
@@ -116,7 +117,34 @@
       pubnub.subscribe({
         channel: "game_channel",
         message: handleVal
-      });      
+      });
+
+      var keys = {};
+      var delta = 0;
+
+      $(document).keydown(function (e) {
+          // keys[e.keyCode] = true;
+          if (e.keyCode == 37)
+            --delta;
+          else if (e.keyCode == 39)
+            ++delta;
+          pubnub.publish({
+            channel: "game_channel",  // GALOV NE ZABUD ETOT HUI
+            message: {"nickname": name, "delta":delta} 
+          });
+      });
+      $(document).keyup(function (e) {
+          // keys[e.keyCode] = false;
+          if (e.keyCode == 37)
+            ++delta;
+          else if (e.keyCode == 39)
+            --delta;
+          pubnub.publish({
+            channel: "game_channel",  // GALOV NE ZABUD ETOT HUI
+            message: {"nickname": name, "delta":delta} 
+          });
+      });
+
     });
   </script>
 {% endblock %}

@@ -1,6 +1,7 @@
 from geom import *
 from snake import *
 import json
+from copy import copy
 
 from Pubnub import Pubnub
 
@@ -18,8 +19,9 @@ defaultParams = {
 }
 
 class Game:
-    def __init__(self, _id, _params = defaultParams):
+    def __init__(self, _id, _players, _params = defaultParams):
         self.id = _id
+        self.players = copy(_players)
 
         self.rounds = _params["rounds"]
         self.playersCount = _params["playersCount"]
@@ -37,9 +39,8 @@ class Game:
             self.canvasSizes[1]), 
             Point(0, self.canvasSizes[1])
         ]
-
         for i in range(self.playersCount):
-            self.snakes.append(Snake(self.canvasSizes, self.colors[i], self.ucolors[i]))
+            self.snakes.append(Snake(self.canvasSizes, self.colors[i], self.ucolors[i], self.players[i]))
             self.alive.append(True)
 
     def check(self, s):
@@ -76,5 +77,5 @@ class Game:
         self.alive = []
         self.aliveCount = self.playersCount
         for i in range(self.playersCount):
-            self.snakes.append(Snake(self.canvasSizes, self.colors[i], self.ucolors[i]))
+            self.snakes.append(Snake(self.canvasSizes, self.colors[i], self.ucolors[i], self.players[i]))
             self.alive.append(True)
