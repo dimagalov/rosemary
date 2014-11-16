@@ -103,7 +103,7 @@ def create_room():
 @app.route("/start_game")
 def start_game():
     global Games, Users, MAX_GAME
-    current_id = int(request.args.get('id', ''))
+    current_id = request.args.get('id', '')
     nickname = request.args.get('nickname', '')
     current_game = Games[current_id]
     Games[current_id].active = True
@@ -115,7 +115,7 @@ def start_game():
 @app.route("/add_room")
 def add_room():
     nickname = request.args.get('nickname', '')
-    current_id = int(request.args.get('id', ''))
+    current_id = request.args.get('id', '')
     Games[current_id].players.append(nickname)
     Users[nickname].games.append(Games[current_id])
     return redirect(url_for('game_page') + '?nickname=%s&id=%s' % (nickname, current_id))
