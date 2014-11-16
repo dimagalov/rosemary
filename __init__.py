@@ -138,7 +138,7 @@ def game_page():
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
-def get_preferences()
+def get_preferences():
     with open('app.preferences', 'r') as preferences:
         lines = preferences.readlines()
         try:
