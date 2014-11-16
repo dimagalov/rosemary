@@ -1,7 +1,8 @@
 /**
  * Declaration of Snake, the main structure we will operate with
  */
-var Snake = function(canvas, color, ucolor) {
+var Snake = function(_player, canvas, color, ucolor) {
+    this.player = _player
 
     /* Canvas attributes */
     this.canvas        = canvas;
