@@ -4,12 +4,24 @@
 from flask import Flask, render_template, url_for, request, redirect
 import random
 from game import game
+from threading import *
 
 app = Flask(__name__)
 
 current_id, Users, Games = 1, dict(), dict()
 
 MAX_GAME = dict()
+
+class GameThread(Thread):
+    def __init__(self, _event, _game):
+        Thread.__init__(self)
+        self.stopped = _event
+        self.game = _game
+    def run(self):
+        while not self.stopped.wait(0.5):
+            self.game.update()
+            if self.game.aliveCount <= 1:
+                self.stopped.set()
 
 class User:
     def __init__(self, nickname):
@@ -84,7 +96,7 @@ def start_game():
 
     MAX_GAME[current_id] = game.Game(current_id)
 
-    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    return render_template('game_page.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
 
 @app.route("/add_room")
 def add_room():
@@ -92,7 +104,7 @@ def add_room():
     current_id = int(request.args.get('id', ''))
     Games[current_id].players.append(nickname)
     Users[nickname].games.append(Games[current_id])
-    return redirect(url_for('game') + '?nickname=%s&id=%d' % (nickname, current_id))
+    return redirect(url_for('game_page') + '?nickname=%s&id=%d' % (nickname, current_id))
 
 @app.route('/game_page')
 def game_page():
@@ -100,8 +112,8 @@ def game_page():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-
-    return render_template('game_page.html', active_game=Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    current_thread = GameThread(Event(), current_game)
+    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
 if __name__ == "__main__":
