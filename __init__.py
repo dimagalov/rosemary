@@ -20,6 +20,7 @@ class GameThread(Thread):
     def run(self):
         while not self.stopped.wait(0.5):
             self.game.update()
+            print "motherfucker"
             if self.game.aliveCount <= 1:
                 self.stopped.set()
 
@@ -112,7 +113,10 @@ def game_page():
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-    current_thread = GameThread(Event(), current_game)
+    if current_game.active:
+        print "iiojioejfwoierjpidk"
+        current_thread = GameThread(Event(), MAX_GAME[current_id])
+        current_thread.run()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
