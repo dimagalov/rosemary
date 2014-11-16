@@ -10,7 +10,10 @@ from flask import Flask, render_template, url_for, request, redirect
 
 app = Flask(__name__)
 
-current_id, Users, Games = md5.new(str(random.randint(0, 100000000000000000000))).hexdigest(), dict(), dict()
+def new_game_id():
+    return md5.new(str(random.randint(0, 100000000000000000000))).hexdigest()
+
+current_id, Users, Games = new_game_id(), dict(), dict()
 
 MAX_GAME = dict()
 
@@ -97,7 +100,7 @@ def create_room():
     room_name = request.args.get('room_name', '')
     Games[current_id] = GameServer(current_id, room_name, nickname)
     Users[nickname].games.append(Games[current_id])
-    current_id = md5.new(str(random.randint(0, 100000000000000000000))).hexdigest()
+    current_id = new_game_id()
 
     return redirect(url_for('personal_page') + '?nickname=%s' % nickname)
 
