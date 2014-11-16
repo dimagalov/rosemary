@@ -51,14 +51,15 @@ class Game:
         return ind
 
     def update(self, deltas):
+        toDraw = []
         for i in range(self.playersCount):
             if self.alive[i]:
-                self.snakes[i].update(deltas[i])
+                toDraw.append(self.snakes[i].update(deltas[i]))
         for i in range(self.playersCount):
             if self.alive[i] and self.check(i):
                 self.alive[i] = False
                 self.aliveCount -= 1
-        # there should be publish
+        # there should publish toDraw
 
     def restart(self):
         self.snakes = []

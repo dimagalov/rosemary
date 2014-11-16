@@ -36,3 +36,20 @@ class Snake:
             self.points.append(FakePoint())
             if self.chole < self.choleborder:
                 self.chole = randint(self.choleminsize, self.cholemaxsize)
+            toDraw = {
+                "strokeStyle": self.ucolor,
+                "strokeWidth": 5,
+                rounded: True,
+                x1: previous.x, y1: previous.y,
+                x2: self.position.x, y2: self.position.y
+            }
+        else:
+            self.points.append(self.position)
+            toDraw = {
+                "strokeStyle": self.color,
+                "strokeWidth": 5,
+                rounded: True,
+                x1: previous.x, y1: previous.y,
+                x2: self.position.x, y2: self.position.y
+            }
+        return toDraw
