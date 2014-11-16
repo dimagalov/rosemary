@@ -11,7 +11,9 @@ CONTROLS = [
     [222, 221],
 ];
 
-var Game = function (canvas, table) {
+var Game = function (_id, _players, canvas, table) {
+    this.id = _id
+    this.players = _players
     var name, score, updiv;
     this.canvas = canvas;
     this.table = table;
@@ -22,7 +24,7 @@ var Game = function (canvas, table) {
     this.alive_count = PLAYERS_COUNT;
     this.walls = [new Point(0, 0), new Point(640, 0), new Point(640, 480), new Point(0, 480)];
     for (i = 0; i < PLAYERS_COUNT; ++i) {
-        this.snakes.push(new Snake(canvas, COLORS[i], UCOLORS[i]));
+        this.snakes.push(new Snake(_players[i], canvas, COLORS[i], UCOLORS[i]));
         this.alive.push(1);
         updiv = $("<div>").css("color", COLORS[i]).prop("class", "col-xs-12").prop("id", "player" + (i + 1).toString());
         name = $("<div>").text("player #" + (i + 1).toString()).prop("class", "playerName");
@@ -113,7 +115,7 @@ var Game = function (canvas, table) {
         this.alive = [];
         this.alive_count = this.players_count;
         for (var i = 0; i < this.players_count; ++i) {
-            this.snakes.push(new Snake(canvas, COLORS[i], UCOLORS[i]));
+            this.snakes.push(new Snake(this.players[i], canvas, COLORS[i], UCOLORS[i]));
             this.alive.push(1);
         }
     }

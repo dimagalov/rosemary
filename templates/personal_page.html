@@ -3,10 +3,6 @@
 
 {% block content %}
 <div class="container"><div class="row">
-  <div class="page-header text-center pageelem" style="padding-top: 1px;">
-    <h1>Hi, {{nickname}}!</h1>
-  </div>
-
   <div class="col-md-5 col-xs-12 pageelem">
     <h2 style="margin-bottom: 15px;">Used rooms</h2>
     <ul class="list-unstyled">
@@ -33,11 +29,14 @@
 </div></div>
 
 <div class="navbar navbar-default navbar-fixed-bottom" style="background-color: #fff;">
-  <form class="navbar-form navbar-left" action="{{ create_room_url }}">
-    <input class="form-control" type="text" name="room_name" value="" placeholder="Enter room name">
-    <input class="form-control" type="submit" value="Create Room">
-    <input type="hidden" name="nickname" value="{{ nickname }}" />
-  </form>
+  <div class="col-md-4 col-xs-12">
+    <form class="navbar-form navbar-left" action="{{ create_room_url }}">
+      <input class="form-control" type="text" name="room_name" value="" placeholder="Enter room name">
+      <input class="form-control" type="submit" value="Create Room">
+      <input type="hidden" name="nickname" value="{{ nickname }}" />
+    </form>
+  </div>
+  <div class="col-md-4 col-xs-12 text-center navbar-text">Hi, {{ nickname }}!</div>
 </div>
 
 {% endblock %}
