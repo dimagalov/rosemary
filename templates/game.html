@@ -99,10 +99,9 @@
       });
 
       function handleVal(message) {
-        // var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
-
-        console.log("Done!");
-        // messageList.append(messageEl);
+        var toDraw = JSON.parse(message);
+        for (var i = 0; i < toDraw.length; ++i)
+          canvas.drawLine(toDraw[i]);
       };
 
       pubnub.subscribe({
