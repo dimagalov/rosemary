@@ -156,6 +156,8 @@
         message: handleDelta
       });
 
+      {% if active_game %}
+
       var game = new Game(channel, players, canvas, $("#gameTable"));
 
       var gameFunction = function () {
@@ -221,6 +223,7 @@
                 });
             }
         }, 500);
+      {% endif %}
     }
     });
   </script>

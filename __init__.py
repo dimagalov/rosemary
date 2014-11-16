@@ -118,7 +118,7 @@ def game_page():
     # if current_game.active:
     #     current_thread = GameThread(Event(), MAX_GAME[current_id + "_sis"])
     #     current_thread.start()
-    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players="*".join(current_game.players), nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    return render_template('game_page.html', not_active_game=not Games[current_id].active, active_game=Games[current_id].active, id=current_id, players="*".join(current_game.players), nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
 # def get_preferences():

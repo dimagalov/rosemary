@@ -19,7 +19,7 @@
     <h2 class="col-xs-12 text-center text-primary">Welcome to slines!</h2>
     <form class="form" action="{{ submit_url }}">
       <div class="form-group">
-        <input class="form-control" type="text" name="nickname" value="" placeholder="Enter your nickname" style="width:100%;">
+        <input id="mainInput" class="form-control" type="text" name="nickname" value="" placeholder="Enter your nickname" style="width:100%;">
       </div>
       <div class="form-group">
         <input class="form-control btn-primary" type="submit" value="Submit">
@@ -27,4 +27,9 @@
     </form>
   </div>
 </div></div>
+<script>
+  $(document).ready(function() {
+    $("#mainInput").focus();
+  });
+</script>
 {% endblock %}
