@@ -3,10 +3,13 @@
 
 from flask import Flask, render_template, url_for, request, redirect
 import random
+from game import game
 
 app = Flask(__name__)
 
 current_id, Users, Games = 1, dict(), dict()
+
+MAX_GAME = dict()
 
 class User:
     def __init__(self, nickname):
@@ -30,7 +33,7 @@ class GameServer:
         self.id = new_id
         self.name = name
         self.players = [creator]
-        self.url = url_for('game') + '?id=%d' % self.id
+        self.url = url_for('game_page') + '?id=%d' % self.id
         self.active = False
 
 @app.route("/")
@@ -55,8 +58,8 @@ def personal_page():
     if nickname not in Users:
         Users[nickname] = User(nickname)
     game_names = []
-    for game in Users[nickname].games:
-        game_names.append(game.name)
+    for current_game in Users[nickname].games:
+        game_names.append(current_game.name)
 
     return render_template('personal_page.html', nickname=nickname, games=Users[nickname].games, create_room_url=url_for('create_room'), all_games=Games, game_names=game_names)
 
@@ -78,6 +81,9 @@ def start_game():
     nickname = request.args.get('nickname', '')
     current_game = Games[current_id]
     Games[current_id].active = True
+
+    MAX_GAME[current_id] = game.Game(current_id)
+
     return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
 
 @app.route("/add_room")
@@ -88,13 +94,15 @@ def add_room():
     Users[nickname].games.append(Games[current_id])
     return redirect(url_for('game') + '?nickname=%s&id=%d' % (nickname, current_id))
 
-@app.route('/game')
-def game():
+@app.route('/game_page')
+def game_page():
     global Games
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
     current_game = Games[current_id]
-    return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+
+    return render_template('game_page.html', active_game=Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+        
 
 if __name__ == "__main__":
     app.run(debug=True)

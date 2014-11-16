@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Game{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid" style="margin-bottom: 50px;">
+    <div class="row">
+      <div class="col-md-9 col-xs-12 text-center" style="padding-top: 20px;">
+        <canvas id="field" width="640px" height="480px"></canvas>
+      </div>
+      <div class="col-md-3 col-xs-12" style="background-color: #fff;">
+        <div class="col-xs-12">
+          <ul id="messageList" class="list-unstyled" style="overflow: auto;"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar navbar-default navbar-fixed-bottom" style="background-color: #fff;">
+    <div class="row">
+      <div class="col-md-1 col-xs-6">
+        <form class="navbar-form" action="{{ add_room_url }}">
+          <button type="submit" class="btn btn-default">Add group</button>
+          <input type="hidden" name="nickname" value="{{ nickname }}" />
+          <input type="hidden" name="id" value="{{ id }}" />
+        </form>
+      </div>
+      <div class="col-md-8 col-xs-6">
+        <form class="navbar-form" action="{{ start_game_url }}">
+          <button type="submit" class="btn btn-default">Start game</button>
+          <input type="hidden" name="nickname" value="{{ nickname }}" />
+          <input type="hidden" name="id" value="{{ id }}" />
+        </form>
+      </div>
+      <div class="col-md-3 col-xs-12 text-center">
+        <form id="messageInputForm" class="navbar-form">
+          <input id="messageInput" class="form-control" type="text" placeholder="chat" style="width: 100%;">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var channel = '{{ channel }}',
+        name = '{{ nickname }}',
+        mycolor = '{{ mycolor }}';
+        
+    $(document).ready(function () {
+
+      $("#messageList").css("height", ($(window).height() - 60).toString() + "px");
+      $(window).resize(function() {
+        $("#messageList").css("height", $(window).height().toString() + "px");
+      });
+
+      var pubnub = PUBNUB.init({
+        publish_key: 'pub-c-33787580-d63f-4c10-a274-4673c54b6655',
+        subscribe_key: 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe'
+      });
+
+      var messageContent = $('#messageContent'),
+          sendMessageButton = $('#sendMessageButton'),
+          messageList = $('#messageList');
+
+      function handleMessage(message) {
+        var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
+
+        // console.log(messageEl);
+        messageList.append(messageEl);
+      };
+
+      $("#messageInputForm").submit(function(event) {
+        event.preventDefault();
+        message = $("#messageInput").val();
+        if (message != '') {
+          pubnub.publish({
+            channel: channel,
+            message: {
+              username: name,
+              color: mycolor,
+              text: message
+            }
+          });
+          $("#messageInput").val("");
+        }
+      });
+
+      pubnub.subscribe({
+        channel: channel,
+        message: handleMessage
+      });
+
+      canvas = $("#field");
+      canvasWidth = parseInt(canvas.prop("width"));
+      canvasHeight = parseInt(canvas.prop("height"));
+      canvasCenterX = canvasWidth / 2;
+      canvasCenterY = canvasHeight / 2;
+      canvas.drawRect({
+        fillStyle: "#ccc",
+        x: canvasCenterX,
+        y: canvasCenterY,
+        width: canvasWidth,
+        height: canvasHeight,
+      });
+
+      function handleVal(message) {
+        var toDraw = JSON.parse(message);
+        for (var i = 0; i < toDraw.length; ++i)
+          canvas.drawLine(toDraw[i]);
+      };
+
+      pubnub.subscribe({
+        channel: "game_channel",
+        message: handleVal
+      });      
+    });
+  </script>
+{% endblock %}
