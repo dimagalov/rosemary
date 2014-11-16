@@ -1,5 +1,6 @@
 from geom import *
 from snake import *
+import json
 
 from Pubnub import Pubnub
 
@@ -56,7 +57,7 @@ class Game:
                 d += 2
             for j in range(0, len(self.snakes[i].points) - d):
                 if not (isinstance(self.snakes[i].points[j], FakePoint) or isinstance(self.snakes[i].points[j + 1], FakePoint)):
-                    ind |= segmentsIntersect(self.snakes[s].points[length - 1], self.snakes[s].points[length - 2], self.snake[i].points[j], self.snakes[i].points[j + 1])
+                    ind |= segmentsIntersect(self.snakes[s].points[length - 1], self.snakes[s].points[length - 2], self.snakes[i].points[j], self.snakes[i].points[j + 1])
         return ind
 
     def update(self, deltas):

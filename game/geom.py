@@ -10,7 +10,7 @@ eps = 10**-7
 '''
 True if _a, _b have different signes
 '''
-def differentSignes(_a, _b):
+def differentSigns(a, b):
     return (a >= 0 and b <= 0) or (a <= 0 and b >= 0)
 
 

@@ -18,9 +18,8 @@ class GameThread(Thread):
         self.stopped = _event
         self.game = _game
     def run(self):
-        while not self.stopped.wait(0.5):
-            self.game.update()
-            print "motherfucker"
+        while not self.stopped.wait(0.01):
+            self.game.update([0,0,0,0])
             if self.game.aliveCount <= 1:
                 self.stopped.set()
 
@@ -97,7 +96,7 @@ def start_game():
 
     MAX_GAME[current_id] = game.Game(current_id)
 
-    return render_template('game_page.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 
 @app.route("/add_room")
 def add_room():
@@ -116,7 +115,7 @@ def game_page():
     print "iiojioejfwoierjpidk"
     if current_game.active:
         current_thread = GameThread(Event(), MAX_GAME[current_id])
-        current_thread.run()
+        current_thread.start()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
