@@ -53,12 +53,8 @@ class GameServer:
 
     def handleDeltaChange(self, message, channel):
         global MAX_GAME
-        # print("---->", message)
-        # parsed_message = json.loads(message)
         if MAX_GAME.keys() != []:
-            print(MAX_GAME.keys())
             for snake in MAX_GAME[channel].snakes:
-                print(snake.player, message["nickname"])
                 if snake.player == message["nickname"]:
                     snake.delta = int(message["delta"])
 
@@ -110,8 +106,6 @@ def start_game():
 
     MAX_GAME[str(current_id) + "_sis"] = game.Game(current_id, Games[current_id].players)
 
-    print("!!!!!!!!!!!!!", MAX_GAME.keys())
-
     return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 
 @app.route("/add_room")
@@ -127,26 +121,23 @@ def game_page():
     global Games
     nickname = request.args.get('nickname', '')
     current_id = int(request.args.get('id', ''))
-    # current_id = 1
     current_game = Games[current_id]
-    # print "iiojioejfwoierjpidk"
 
     if current_game.active:
-        print "active, bitch"
         current_thread = GameThread(Event(), MAX_GAME[str(current_id) + "_sis"])
         current_thread.start()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
-def get_preferences():
-    with open('app.preferences', 'r') as preferences:
-        lines = preferences.readlines()
-        try:
-            resX = int(lines[0].split()[2])
-            resY = int(lines[1].split()[2])
-        except:
-            pass
-            # YA EBAL KAROCH
+# def get_preferences():
+#     with open('app.preferences', 'r') as preferences:
+#         lines = preferences.readlines()
+#         try:
+#             resX = int(lines[0].split()[2])
+#             resY = int(lines[1].split()[2])
+#         except:
+#             pass
+#             # YA EBAL KAROCH
 
 if __name__ == "__main__":
     # get_preferences()

@@ -69,7 +69,6 @@
       function handleMessage(message) {
         var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
 
-        // console.log(messageEl);
         messageList.append(messageEl);
         $("ul").animate({ scrollTop: $(document).height() - $(window).height() }, 'slow');
       };
@@ -123,7 +122,6 @@
       var delta = 0;
 
       $(document).keydown(function (e) {
-          // keys[e.keyCode] = true;
           if (e.keyCode == 37)
             --delta;
           else if (e.keyCode == 39)
@@ -134,7 +132,6 @@
           });
       });
       $(document).keyup(function (e) {
-          // keys[e.keyCode] = false;
           if (e.keyCode == 37)
             ++delta;
           else if (e.keyCode == 39)
