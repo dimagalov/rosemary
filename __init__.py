@@ -14,6 +14,8 @@ current_id, Users, Games = 1, dict(), dict()
 MAX_GAME = dict()
 
 def handleDeltaChange(message, channel):
+    if 1 not in MAX_GAME:
+        return
     for snake in MAX_GAME[1].snakes:
         if snake.player == message["nickname"]:
             snake.delta = int(message["delta"])
@@ -28,7 +30,7 @@ class GameThread(Thread):
         self.game = _game
     def run(self):
         while not self.stopped.wait(0.01):
-            # self.game.update(list([snake.delta for snake in self.game.snakes]))
+            self.game.update(list([snake.delta for snake in self.game.snakes]))
             if self.game.aliveCount <= 1:
                 self.stopped.set()
 
@@ -119,10 +121,12 @@ def add_room():
 def game_page():
     global Games
     nickname = request.args.get('nickname', '')
-    current_id = int(request.args.get('id', ''))
+    # current_id = int(request.args.get('id', ''))
+    current_id = 1
     current_game = Games[current_id]
     print "iiojioejfwoierjpidk"
     if current_game.active:
+        print "active, bitch"
         current_thread = GameThread(Event(), MAX_GAME[current_id])
         current_thread.start()
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
