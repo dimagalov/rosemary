@@ -67,19 +67,20 @@
 
      $(document).keydown(function (e) {
           if (e.keyCode == 37)
-            --deltas[nicknameToId[nickname]];
+            deltas[nicknameToId[nickname]] = -1
           else if (e.keyCode == 39)
-            ++deltas[nicknameToId[nickname]];
+            deltas[nicknameToId[nickname]] = 1
           pubnub1.publish({
             channel: channel + "_sis",
             message: {"nickname": name, "delta": deltas[nicknameToId[nickname]]} 
           });
       });
       $(document).keyup(function (e) {
-          if (e.keyCode == 37)
-            ++deltas[nicknameToId[nickname]];
-          else if (e.keyCode == 39)
-            --deltas[nicknameToId[nickname]];
+          // if (e.keyCode == 37)
+          //   ++deltas[nicknameToId[nickname]];
+          // else if (e.keyCode == 39)
+          //   --deltas[nicknameToId[nickname]];
+          deltas[nicknameToId[nickname]] = 0;
           pubnub1.publish({
             channel: channel + "_sis",
             message: {"nickname": name, "delta": deltas[nicknameToId[nickname]]} 
@@ -158,6 +159,7 @@
       var game = new Game(channel, players, canvas, $("#gameTable"));
 
       var gameFunction = function () {
+        console.log(deltas);
         game.update(deltas);
         if (game.alive_count <= 1) {
             stopGame();
@@ -171,7 +173,6 @@
             game.awardWinner();
             round++;
             if (round <= ROUNDS) {
-              alert("blya");
                 $(window).one("keypress", function () {
                     $("#roundDiv").html("Round " + round.toString() + "/" + ROUNDS.toString());
                     game.restart();
