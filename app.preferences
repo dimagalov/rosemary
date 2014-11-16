@@ -1,0 +1,6 @@
+resolutionX = 640
+resolutionY = 480
+player_parameters:
+...
+server_parameters:
+...

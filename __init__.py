@@ -138,5 +138,14 @@ def game_page():
     return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
+def get_preferences()
+    with open('app.preferences', 'r') as preferences:
+        lines = preferences.readlines()
+        try:
+            resX = int(lines[0].split()[2])
+            resY = int(lines[1].split()[2])
+
 if __name__ == "__main__":
+    # get_preferences()
+    # set_up_game()
     app.run(debug=True)
