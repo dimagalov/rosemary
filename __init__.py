@@ -105,7 +105,8 @@ def add_room():
     nickname = request.args.get('nickname', '')
     current_id = request.args.get('id', '')
     Games[current_id].players.append(nickname)
-    Users[nickname].games.append(Games[current_id])
+    if Games[current_id] not in Users[nickname].games:
+        Users[nickname].games.append(Games[current_id])
     return redirect(url_for('game_page') + '?nickname=%s&id=%s' % (nickname, current_id))
 
 @app.route('/game_page')
