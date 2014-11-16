@@ -35,9 +35,9 @@ class User:
         self.color = self.rand_color()
     
     def rand_color(self):
-        red = 150 + random.randint(-60, 60)
-        green = 150 + random.randint(-60, 60)
-        blue = 150 + random.randint(-60, 60)
+        red = 160 + random.randint(-60, 60)
+        green = 160 + random.randint(-60, 60)
+        blue = 160 + random.randint(-60, 60)
         temp = [red, green, blue]
         index = random.randint(0, 2)
         temp[index] //= 2
@@ -108,9 +108,9 @@ def start_game():
     current_game = Games[current_id]
     Games[current_id].active = True
 
-    MAX_GAME[str(current_id) + "_sis"] = game.Game(current_id, Games[current_id].players)
+    MAX_GAME[current_id + "_sis"] = game.Game(current_id, Games[current_id].players)
 
-    return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
+    return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 
 @app.route("/add_room")
 def add_room():
@@ -118,7 +118,7 @@ def add_room():
     current_id = int(request.args.get('id', ''))
     Games[current_id].players.append(nickname)
     Users[nickname].games.append(Games[current_id])
-    return redirect(url_for('game_page') + '?nickname=%s&id=%d' % (nickname, current_id))
+    return redirect(url_for('game_page') + '?nickname=%s&id=%s' % (nickname, current_id))
 
 @app.route('/game_page')
 def game_page():
@@ -128,9 +128,9 @@ def game_page():
     current_game = Games[current_id]
 
     # if current_game.active:
-    #     current_thread = GameThread(Event(), MAX_GAME[str(current_id) + "_sis"])
+    #     current_thread = GameThread(Event(), MAX_GAME[current_id + "_sis"])
     #     current_thread.start()
-    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
 # def get_preferences():
