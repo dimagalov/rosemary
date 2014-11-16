@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import random
+import random, json
 import md5
 from threading import *
 from Pubnub import Pubnub
@@ -15,17 +15,6 @@ def new_game_id():
 current_id, Users, Games = new_game_id(), dict(), dict()
 
 MAX_GAME = dict()
-
-# class GameThread(Thread):
-#     def __init__(self, _event, _game):
-#         Thread.__init__(self)
-#         self.stopped = _event
-#         self.game = _game
-#     def run(self):
-#         while not self.stopped.wait(0.4):
-#             self.game.update(list([snake.delta for snake in self.game.snakes]))
-#             if self.game.aliveCount <= 1:
-#                 self.stopped.set()
 
 class User:
     def __init__(self, nickname):
@@ -51,15 +40,15 @@ class GameServer:
         self.players = [creator]
         self.url = url_for('game_page') + '?id=%s' % self.id
         self.active = False
-        self.pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
-        self.pubnub.subscribe(str(self.id) + "_sis", callback=self.handleDeltaChange, error=None)
+        # self.pubnub = Pubnub(publish_key = 'pub-c-33787580-d63f-4c10-a274-4673c54b6655', subscribe_key = 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe')
+        # self.pubnub.subscribe(str(self.id) + "_sis", callback=self.handleDeltaChange, error=None)
 
-    def handleDeltaChange(self, message, channel):
-        global MAX_GAME
-        if MAX_GAME.keys() != []:
-            for snake in MAX_GAME[channel].snakes:
-                if snake.player == message["nickname"]:
-                    snake.delta = int(message["delta"])
+    # def handleDeltaChange(self, message, channel):
+        # global MAX_GAME
+        # if MAX_GAME.keys() != []:
+        #     for snake in MAX_GAME[channel].snakes:
+        #         if snake.player == message["nickname"]:
+        #             snake.delta = int(message["delta"])
 
 @app.route("/")
 def landing():
@@ -129,7 +118,7 @@ def game_page():
     # if current_game.active:
     #     current_thread = GameThread(Event(), MAX_GAME[current_id + "_sis"])
     #     current_thread.start()
-    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
+    return render_template('game_page.html', not_active_game=not Games[current_id].active, id=current_id, players="*".join(current_game.players), nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
         
 
 # def get_preferences():

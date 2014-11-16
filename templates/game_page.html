@@ -52,13 +52,41 @@
     </div>
   </div>
 
-  <script>
+  <script type="text/javascript">
+    var pubnub1 = PUBNUB.init({
+        publish_key: 'pub-c-33787580-d63f-4c10-a274-4673c54b6655',
+        subscribe_key: 'sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe'
+      });
+    var deltas = [0, 0, 0, 0, 0, 0, 0, 0];
+
     var channel = '{{ channel }}',
         name = '{{ nickname }}',
-        mycolor = '{{ mycolor }}';
+        mycolor = '{{ mycolor }}',
+        players = '{{players}}'.split("*"),
+        nickname = '{{nickname}}';
+
+     $(document).keydown(function (e) {
+          if (e.keyCode == 37)
+            --deltas[nicknameToId[nickname]];
+          else if (e.keyCode == 39)
+            ++deltas[nicknameToId[nickname]];
+          pubnub1.publish({
+            channel: channel + "_sis",
+            message: {"nickname": name, "delta": deltas[nicknameToId[nickname]]} 
+          });
+      });
+      $(document).keyup(function (e) {
+          if (e.keyCode == 37)
+            ++deltas[nicknameToId[nickname]];
+          else if (e.keyCode == 39)
+            --deltas[nicknameToId[nickname]];
+          pubnub1.publish({
+            channel: channel + "_sis",
+            message: {"nickname": name, "delta": deltas[nicknameToId[nickname]]} 
+          });
+      });
         
     $(document).ready(function () {
-
       $("#messageList").css("height", ($(window).height() - 60).toString() + "px");
       $(window).resize(function() {
         $("#messageList").css("height", $(window).height().toString() + "px");
@@ -113,81 +141,43 @@
         width: canvasWidth,
         height: canvasHeight,
       });
-
-      // function handleVal(message) {
-      //   var toDraw = JSON.parse(message);
-      //   for (var i = 0; i < toDraw.length; ++i)
-      //     canvas.drawLine(toDraw[i]);
-      // };
-
-      // pubnub.subscribe({
-      //   channel: channel + "_sis_draw",
-      //   message: handleVal
-      // });
-
-      // pubnub.subscribe({
-      //   channel: channel + "_sis",
-      //   message: handleVal
-      // });
-
       nicknameToId = {}
       for (var i = 0; i < players.length; ++i)
         nicknameToId[players[i]] = i;
       var deltas = [0, 0, 0, 0, 0, 0, 0, 0];
+      
+      function handleDelta(message, channel) {
+        deltas[nicknameToId[message["nickname"]]] = message["delta"];
+      };
 
-      $(document).keydown(function (e) {
-          if (e.keyCode == 37)
-            --deltas[nicknameToId[nickname]];
-          else if (e.keyCode == 39)
-            ++deltas[nicknameToId[nickname]];
-          pubnub.publish({
-            channel: channel + "_sis",
-            message: {"nickname": name, "delta": delta} 
-          });
-      });
-      $(document).keyup(function (e) {
-          if (e.keyCode == 37)
-            ++deltas[nicknameToId[nickname]];
-          else if (e.keyCode == 39)
-            --deltas[nicknameToId[nickname]];
-          pubnub.publish({
-            channel: channel + "_sis",
-            message: {"nickname": name, "delta": delta} 
-          });
+      pubnub1.subscribe({
+        channel: channel + "_sis",
+        message: handleDelta
       });
 
-      if ({{ not_active_game }} == "False") {
-        var game = new Game(canvas, $("#gameTable"));
-        // deltas = [];
-        // for (i = 0; i < game.players_count; ++i)
-        //   deltas.push(0);
-        var round = 1;
+      var game = new Game(channel, players, canvas, $("#gameTable"));
 
-        var gameFunction = function () {
-          // for (i = 0; i < game.players_count; ++i) {
-          //   deltas[i] = 0;
-          //   if (keys[game.keys[i][0]]) deltas[i] --;
-          //   if (keys[game.keys[i][1]]) deltas[i] ++;
-          // }
-          game.update(deltas);
-          if (game.alive_count <= 1) {
+      var gameFunction = function () {
+        game.update(deltas);
+        if (game.alive_count <= 1) {
             stopGame();
-          }
         }
+      }
 
-    $("#roundDiv").html("Round " + round.toString() + "/" + ROUNDS.toString());
-    var gameCycle = window.setInterval(gameFunction, 20);
-    alert("h")
-    var stopGame = function () {
+      var gameCycle = window.setInterval(gameFunction, 20), round = 1;
+      var stopGame = function () {
         clearInterval(gameCycle);
         setTimeout(function () {
             game.awardWinner();
             round++;
             if (round <= ROUNDS) {
+              alert("blya");
                 $(window).one("keypress", function () {
                     $("#roundDiv").html("Round " + round.toString() + "/" + ROUNDS.toString());
                     game.restart();
                     gameCycle = window.setInterval(gameFunction, 20);
+                    for (var ii = 0; ii < deltas.length; ++ii)
+                      deltas[ii] = 0;
                 });
             }
             else {
@@ -231,6 +221,6 @@
             }
         }, 500);
     }
-});
-      }
+    });
+  </script>
 {% endblock %}
