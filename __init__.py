@@ -3,7 +3,6 @@
 
 import random
 import md5
-from game import game
 from threading import *
 from Pubnub import Pubnub
 from flask import Flask, render_template, url_for, request, redirect
@@ -108,7 +107,7 @@ def start_game():
     current_game = Games[current_id]
     Games[current_id].active = True
 
-    MAX_GAME[current_id + "_sis"] = game.Game(current_id, Games[current_id].players)
+    # MAX_GAME[current_id + "_sis"] = game.Game(current_id, Games[current_id].players)
 
     return redirect(url_for('game_page', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=current_id, add_room_url=url_for('add_room'), start_game_url=url_for('start_game')))
 
