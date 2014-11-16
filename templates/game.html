@@ -60,7 +60,7 @@
       function handleMessage(message) {
         var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
 
-        console.log(messageEl);
+        // console.log(messageEl);
         messageList.append(messageEl);
       };
 
@@ -97,6 +97,18 @@
         width: canvasWidth,
         height: canvasHeight,
       });
+
+      function handleVal(message) {
+        // var messageEl = "<li class='message'><span class='username' style='font-weight: bold; color: #" + message.color + ";'>" + message.username + ": </span>" + message.text + "</li>";
+
+        console.log("Done!");
+        // messageList.append(messageEl);
+      };
+
+      pubnub.subscribe({
+        channel: "game_channel",
+        message: handleVal
+      });      
     });
   </script>
 {% endblock %}
