@@ -19,7 +19,7 @@ class GameThread(Thread):
         self.stopped = _event
         self.game = _game
     def run(self):
-        while not self.stopped.wait(0.01):
+        while not self.stopped.wait(0.4):
             self.game.update(list([snake.delta for snake in self.game.snakes]))
             if self.game.aliveCount <= 1:
                 self.stopped.set()

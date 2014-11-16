@@ -5,7 +5,7 @@ from random import randint, random
 Declaration of Snake, the main structure we will operate with
 '''
 class Snake:
-    cangle = 0.1
+    cangle = 0.05
     cspeed = 3.5
     choleprob = 0.08
     choleborder = -10
