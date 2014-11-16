@@ -144,6 +144,9 @@ def get_preferences()
         try:
             resX = int(lines[0].split()[2])
             resY = int(lines[1].split()[2])
+        except:
+            if !debug:
+                shutdown()
 
 if __name__ == "__main__":
     # get_preferences()
