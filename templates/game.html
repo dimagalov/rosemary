@@ -11,7 +11,9 @@
 {% block content %}
   <div class="container-fluid" style="margin-bottom: 50px;">
     <div class="row">
-      <div class="col-md-9 col-xs-12" style="background-color: #fff;">Lorem ipsum</div>
+      <div class="col-md-9 col-xs-12 text-center" style="padding-top: 20px;">
+        <canvas id="field" width="640px" height="480px"></canvas>
+      </div>
       <div class="col-md-3 col-xs-12" style="background-color: #fff;">
         <div class="col-xs-12">
           <ul id="messageList" class="list-unstyled" style="overflow: auto;"></ul>
@@ -84,6 +86,19 @@
       pubnub.subscribe({
         channel: channel,
         message: handleMessage
+      });
+
+      canvas = $("#field");
+      canvasWidth = parseInt(canvas.prop("width"));
+      canvasHeight = parseInt(canvas.prop("height"));
+      canvasCenterX = canvasWidth / 2;
+      canvasCenterY = canvasHeight / 2;
+      canvas.drawRect({
+        fillStyle: "#ccc",
+        x: canvasCenterX,
+        y: canvasCenterY,
+        width: canvasWidth,
+        height: canvasHeight,
       });
     });
   </script>
