@@ -78,7 +78,6 @@ def start_game():
     nickname = request.args.get('nickname', '')
     current_game = Games[current_id]
     Games[current_id].active = True
-
     return render_template('game.html', id=current_id, players=current_game.players, nickname=nickname, mycolor=Users[nickname].color, channel=str(current_id), add_room_url=url_for('add_room'), start_game_url=url_for('start_game'))
 
 @app.route("/add_room")
