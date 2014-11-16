@@ -1,6 +1,13 @@
 from geom import *
 from snake import *
 
+from Pubnub import Pubnub
+
+PUBLISH_KEY = "pub-c-33787580-d63f-4c10-a274-4673c54b6655"
+SUBSCRIBE_KEY = "sub-c-79472c46-6cd4-11e4-ab04-02ee2ddab7fe"
+
+pubnub = Pubnub(PUBLISH_KEY, SUBSCRIBE_KEY, None, False)
+
 defaultParams = {
     "rounds": 50,
     "playersCount": 2,
@@ -59,7 +66,7 @@ class Game:
             if self.alive[i] and self.check(i):
                 self.alive[i] = False
                 self.aliveCount -= 1
-        # there should publish toDraw
+        pubnub.publish("game_channel", json.dumps(toDraw))
 
     def restart(self):
         self.snakes = []
